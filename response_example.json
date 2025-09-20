@@ -1,0 +1,84 @@
+{
+    "is_success": true,
+    "response": {
+        "snippets": [
+            {
+                "data": {
+                    "itemList": [
+                        {
+                            "data": {
+                                "media_content": {
+                                    "media_type": "image",
+                                    "image": {
+                                        "url": "https://cdn.grofers.com/da/cms-assets/cms/product/eca2572f-da3c-4ce0-95e1-7fa67bf1e8cf.jpg",
+                                        "aspect_ratio": 1,
+                                        "placeholder_color": {
+                                            "type": "white",
+                                            "tint": "900"
+                                        }
+                                    }
+                                },
+                                "click_action": {
+                                    "show_gallery": {
+                                        "assets": [
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/eca2572f-da3c-4ce0-95e1-7fa67bf1e8cf.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/e7308860-89b9-4284-b595-dbb537dba9eb.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/177778cc-c88b-4d67-ad8a-d728927e6dbd.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/3b70c20e-5d16-439c-a895-674df6f575b9.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/ba05a4c6-3564-4d3e-a5cf-62d9b9b03b30.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/5af2d020-76f5-4f1f-88fb-944023111e7f.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/3f3704b9-311d-4228-b920-92b6e573e88b.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/da/cms-assets/cms/product/da9ab3b7-2029-475d-8fce-722951564fb8.jpg"
+                                            },
+                                            {
+                                                "asset_type": "image",
+                                                "image_url": "https://cdn.grofers.com/app/images/products/common/customer_care.jpg"
+                                            }
+                                        ]
+                                    },
+                                    "type": "show_gallery"
+                                },
+                                "animation_type": "NONE"
+                            },
+                            "tracking": {
+                                "widget_meta": {
+                                    "child_widget_name": "image",
+                                    "child_widget_title": "Amul Taaza Homogenised Toned Milk",
+                                    "widget_id": "0396cff2-c8c3-46e5-bee9-4272fe6ea255",
+                                    "widget_name": "pdp_carousel",
+                                    "widget_revision_id": "13780403",
+                                    "widget_title": "pdp_carousel_pdp - prod_pdp_carousel_pdp",
+                                    "widget_tracking_id": "",
+                                    "widget_variation_id": ""
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }       
+}

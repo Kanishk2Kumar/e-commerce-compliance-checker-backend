@@ -1,0 +1,13 @@
+[project]
+name = "sih-25057"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "curl-cffi>=0.13.0",
+    "easyocr>=1.7.2",
+    "pillow>=11.3.0",
+    "playwright>=1.55.0",
+    "requests>=2.32.5",
+]
