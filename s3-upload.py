@@ -1,21 +1,50 @@
 from playwright.sync_api import sync_playwright
-from pathlib import Path
+import time
+import boto3
+from io import BytesIO
+import os
+
+# AWS S3 Configuration
+S3_BUCKET_NAME = "sih-25057-backend-storage"
+S3_REGION = "ap-south-1"
+
+# Initialize S3 client
+s3_client = boto3.client(
+    's3',
+    region_name=S3_REGION,
+    # If not using AWS CLI configuration, uncomment and add your credentials:
+    # aws_access_key_id='YOUR_ACCESS_KEY',
+    # aws_secret_access_key='YOUR_SECRET_KEY'
+)
 
 BASE_URL = "https://blinkit.com/v1/layout/product/{}"
-OUTPUT_ROOT = Path("Product-Images")
-OUTPUT_ROOT.mkdir(exist_ok=True)
+
+def upload_to_s3(image_data, s3_key):
+    """Upload image data to S3 bucket"""
+    try:
+        s3_client.put_object(
+            Bucket=S3_BUCKET_NAME,
+            Key=s3_key,
+            Body=image_data,
+            ContentType='image/jpeg'
+        )
+        print(f"✅ Uploaded to S3: s3://{S3_BUCKET_NAME}/{s3_key}")
+        return True
+    except Exception as e:
+        print(f"❌ Failed to upload to S3: {e}")
+        return False
 
 def main():
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=False)  # set True if you want invisible
+        browser = pw.chromium.launch(headless=False)
         context = browser.new_context()
         page = context.new_page()
 
         # visit a real product page once (sets cookies/session)
         page.goto("https://blinkit.com/prn/beanly-choco-hazelnut-spread-with-breadsticks/prid/507408")
-        page.wait_for_timeout(4000)  # wait for Blinkit JS to fire
+        page.wait_for_timeout(4000)
 
-        for pid in range(1, 101):   # <-- changed here
+        for idx, pid in enumerate(range(0, 101), start=1):
             print(f"\n🔎 Fetching {pid}...")
             try:
                 resp = page.evaluate(
@@ -60,13 +89,12 @@ def main():
             except Exception:
                 pass
 
-            if not urls:
-                print(f"⚠️ No images found for {pid}")
+            if len(urls) < 4:
+                print(f"⚠️ Not enough images found for {pid}")
                 continue
 
-            urls = urls[-3:]
-            folder = OUTPUT_ROOT / str(pid)
-            folder.mkdir(parents=True, exist_ok=True)
+            # take 4th-last to 2nd-last
+            urls = urls[-4:-1]
 
             for i, url in enumerate(urls, 1):
                 try:
@@ -78,12 +106,23 @@ def main():
                         }""",
                         url,
                     )
-                    path = folder / f"image_{i}.jpg"
-                    with open(path, "wb") as f:
-                        f.write(bytes(img_resp))
-                    print(f"✅ Saved {path}")
+                    
+                    # Convert to bytes
+                    image_data = bytes(img_resp)
+                    
+                    # Create S3 key (path in bucket)
+                    s3_key = f"product-images/{pid}/image_{i}.jpg"
+                    
+                    # Upload to S3
+                    upload_to_s3(image_data, s3_key)
+                    
                 except Exception as e:
                     print(f"❌ Failed {url}: {e}")
+
+            # delay after every 40 product IDs
+            if idx % 40 == 0:
+                print("⏳ Processed 40 product IDs, sleeping for 60s...")
+                time.sleep(60)
 
         browser.close()
 

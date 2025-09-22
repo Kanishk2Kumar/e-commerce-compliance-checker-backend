@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 from pathlib import Path
-import json
+import time
 
 BASE_URL = "https://blinkit.com/v1/layout/product/{}"
 OUTPUT_ROOT = Path("Product-Images")
@@ -16,8 +16,8 @@ def main():
         page.goto("https://blinkit.com/prn/beanly-choco-hazelnut-spread-with-breadsticks/prid/507408")
         page.wait_for_timeout(4000)  # wait for Blinkit JS to fire
 
-        for pid in [175, 176, 177]:
-            print(f"🔎 Fetching {pid}...")
+        for idx, pid in enumerate(range(0, 101), start=1):   # process IDs 0–100
+            print(f"\n🔎 Fetching {pid}...")
             try:
                 resp = page.evaluate(
                     """async (pid) => {
@@ -45,7 +45,6 @@ def main():
                 continue
 
             data = resp["data"]
-            # try to extract last 3 gallery images
             urls = []
             try:
                 snippets = data["response"]["snippets"]
@@ -62,11 +61,12 @@ def main():
             except Exception:
                 pass
 
-            if not urls:
-                print(f"⚠️ No images found for {pid}")
+            if len(urls) < 4:
+                print(f"⚠️ Not enough images found for {pid}")
                 continue
 
-            urls = urls[-3:]
+            # take 4th-last to 2nd-last
+            urls = urls[-4:-1]
             folder = OUTPUT_ROOT / str(pid)
             folder.mkdir(parents=True, exist_ok=True)
 
@@ -86,6 +86,11 @@ def main():
                     print(f"✅ Saved {path}")
                 except Exception as e:
                     print(f"❌ Failed {url}: {e}")
+
+            # delay after every 40 product IDs
+            if idx % 40 == 0:
+                print("⏳ Processed 40 product IDs, sleeping for 60s...")
+                time.sleep(60)
 
         browser.close()
 
