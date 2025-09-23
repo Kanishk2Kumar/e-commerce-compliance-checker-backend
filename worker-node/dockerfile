@@ -1,0 +1,25 @@
+# Use Playwright's official Python image (browsers + deps included)
+FROM mcr.microsoft.com/playwright/python:latest
+
+# Avoid python buffering so logs appear immediately
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app
+
+# Copy only requirements first to leverage Docker cache
+COPY requirements.txt /app/requirements.txt
+
+# Upgrade pip and install Python deps
+RUN python -m pip install --upgrade pip \
+ && pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy app code
+COPY . /app
+
+# Ensure playwright browsers are installed (should be in base image, but safe to call)
+RUN python -m playwright install --with-deps chromium
+
+# Expose port used by uvicorn
+EXPOSE 8000
+
+# Run uvicorn (do NOT use reload in production)
+CMD ["uvicorn", "worker2:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
