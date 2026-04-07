@@ -42,14 +42,14 @@ variable "public_subnet_cidrs" {
 variable "key_name" {
   description = "Optional EC2 key pair name for SSH access."
   type        = string
-  default     = null
+  default     = "us-east-1-key"
   nullable    = true
 }
 
 variable "ssh_ingress_cidrs" {
   description = "CIDR blocks allowed to SSH into EC2 instances."
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 variable "central_api_ingress_cidrs" {

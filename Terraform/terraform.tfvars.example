@@ -12,7 +12,7 @@ worker_api_ingress_cidrs = []
 ssh_ingress_cidrs        = []
 
 # Set this if you already have a key pair for SSH access.
-# key_name = "my-ec2-key"
+key_name = "us-east-1-key"
 
 # Set this if you want the exact bucket name from your old setup or any other custom name.
 # s3_bucket_name = "sih-25057-backend-storage-shardul"
