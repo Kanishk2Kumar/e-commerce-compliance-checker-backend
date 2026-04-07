@@ -8,8 +8,8 @@ deploy_central_server   = true
 central_api_ingress_cidrs = [
   "0.0.0.0/0"
 ]
-worker_api_ingress_cidrs = []
-ssh_ingress_cidrs        = []
+worker_api_ingress_cidrs = ["0.0.0.0/0"]
+ssh_ingress_cidrs        = ["0.0.0.0/0"]
 
 # Set this if you already have a key pair for SSH access.
 key_name = "us-east-1-key"

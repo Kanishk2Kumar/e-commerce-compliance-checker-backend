@@ -61,7 +61,7 @@ variable "central_api_ingress_cidrs" {
 variable "worker_api_ingress_cidrs" {
   description = "Optional CIDR blocks allowed to reach worker APIs directly. Keep empty for private-only worker access."
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 variable "deploy_central_server" {
