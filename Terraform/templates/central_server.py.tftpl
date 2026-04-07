@@ -1,0 +1,79 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import asyncio
+import httpx
+import math
+
+app = FastAPI(title="Simple Central Server")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+WORKERS = ${worker_urls_json}
+
+
+class RangeRequest(BaseModel):
+    start: int
+    end: int
+
+
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "worker_count": len(WORKERS),
+        "workers": WORKERS,
+    }
+
+
+@app.post("/dispatch")
+async def dispatch_range(req: RangeRequest):
+    start, end = req.start, req.end
+    if start >= end:
+        raise HTTPException(status_code=400, detail="Invalid range")
+
+    if not WORKERS:
+        raise HTTPException(status_code=500, detail="No workers are configured")
+
+    num_workers = len(WORKERS)
+    total = end - start + 1
+    chunk_size = math.ceil(total / num_workers)
+
+    tasks = []
+    assignments = {}
+
+    worker_items = list(WORKERS.items())
+    for i, (worker_name, worker_url) in enumerate(worker_items):
+        chunk_start = start + i * chunk_size
+        chunk_end = min(chunk_start + chunk_size - 1, end)
+        if chunk_start > end:
+            break
+
+        payload = {"start": chunk_start, "end": chunk_end}
+        assignments[worker_name] = {"url": worker_url, "range": payload}
+        tasks.append(send_to_worker(worker_url, payload))
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+
+    for worker_name, result in zip(assignments.keys(), results):
+        if isinstance(result, Exception):
+            assignments[worker_name]["status"] = f"Error: {result}"
+        else:
+            assignments[worker_name]["status"] = result
+
+    return {"workers_assigned": assignments}
+
+
+async def send_to_worker(worker_url: str, payload: dict):
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.post(f"{worker_url}/scan-range", json=payload)
+            return {"code": response.status_code, "response": response.text}
+    except Exception as exc:
+        return {"error": str(exc)}

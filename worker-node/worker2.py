@@ -10,8 +10,8 @@ from playwright.sync_api import sync_playwright
 import urllib.parse
 
 # ----- AWS CONFIG -----
-S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "sih-25057-backend-storage")
-S3_REGION = os.getenv("S3_REGION", "ap-south-1")
+S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "sih-25057-backend-storage-shardul")
+S3_REGION = os.getenv("S3_REGION", "us-east-1")
 DYNAMODB_TABLE = os.getenv("DYNAMODB_TABLE", "TextractProductImages")
 
 # AWS clients
@@ -98,7 +98,7 @@ def run_scan(start, end, headless=True):
         try:
             # Proper warmup - visit actual page and wait for full load
             print("🌐 Warming up browser session...")
-            warmup_url = "https://blinkit.com/cn/fruits-vegetables/cid/15"
+            warmup_url = "https://blinkit.com/cn/fruits-vegetables/cid/175"
             page.goto(warmup_url, wait_until='networkidle')
             page.wait_for_timeout(5000)  # Wait for full page load
             

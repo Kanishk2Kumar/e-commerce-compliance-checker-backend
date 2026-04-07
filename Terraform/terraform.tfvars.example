@@ -1,0 +1,18 @@
+aws_region              = "us-east-1"
+project_name            = "sih-25057"
+environment             = "prod"
+worker_count            = 10
+worker_instance_type    = "t3.micro"
+central_instance_type   = "t3.micro"
+deploy_central_server   = true
+central_api_ingress_cidrs = [
+  "0.0.0.0/0"
+]
+worker_api_ingress_cidrs = []
+ssh_ingress_cidrs        = []
+
+# Set this if you already have a key pair for SSH access.
+# key_name = "my-ec2-key"
+
+# Set this if you want the exact bucket name from your old setup or any other custom name.
+# s3_bucket_name = "sih-25057-backend-storage-shardul"

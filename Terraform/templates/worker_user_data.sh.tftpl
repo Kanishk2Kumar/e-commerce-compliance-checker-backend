@@ -1,0 +1,28 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf update -y
+dnf install -y docker
+
+systemctl enable --now docker
+
+mkdir -p /app/logs /app/data
+
+cat <<'ENVFILE' >/etc/compliance-worker.env
+NODE_ENV=production
+S3_BUCKET_NAME=${bucket_name}
+S3_REGION=${aws_region}
+DYNAMODB_TABLE=${dynamodb_table}
+ENVFILE
+
+docker pull ${docker_image}
+docker rm -f compliance-worker || true
+
+docker run -d \
+  --name compliance-worker \
+  --restart unless-stopped \
+  -p ${host_port}:${container_port} \
+  --env-file /etc/compliance-worker.env \
+  -v /app/logs:/app/logs \
+  -v /app/data:/app/data \
+  ${docker_image}

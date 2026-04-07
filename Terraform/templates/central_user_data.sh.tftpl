@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf update -y
+dnf install -y python3 python3-pip
+
+mkdir -p /opt/compliance-central
+
+cat <<'REQ' >/opt/compliance-central/requirements.txt
+fastapi
+uvicorn[standard]
+httpx
+pydantic
+REQ
+
+cat <<'PYAPP' >/opt/compliance-central/central_server.py
+${central_server_py}
+PYAPP
+
+python3 -m venv /opt/compliance-central/.venv
+/opt/compliance-central/.venv/bin/pip install --upgrade pip
+/opt/compliance-central/.venv/bin/pip install -r /opt/compliance-central/requirements.txt
+
+cat <<'SERVICE' >/etc/systemd/system/compliance-central.service
+[Unit]
+Description=Compliance central dispatcher
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/compliance-central
+ExecStart=/opt/compliance-central/.venv/bin/uvicorn central_server:app --host 0.0.0.0 --port ${central_port}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+SERVICE
+
+systemctl daemon-reload
+systemctl enable --now compliance-central.service
