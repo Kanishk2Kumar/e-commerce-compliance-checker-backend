@@ -1,7 +1,7 @@
 aws_region              = "us-east-1"
 project_name            = "sih-25057"
 environment             = "prod"
-worker_count            = 10
+worker_count            = 5
 worker_instance_type    = "t3.micro"
 central_instance_type   = "t3.micro"
 deploy_central_server   = true
