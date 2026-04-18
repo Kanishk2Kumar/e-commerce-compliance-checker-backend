@@ -70,6 +70,17 @@ variable "deploy_central_server" {
   default     = true
 }
 
+variable "central_worker_url_mode" {
+  description = "Which worker endpoint type the central server should use: private or public."
+  type        = string
+  default     = "public"
+
+  validation {
+    condition     = contains(["private", "public"], var.central_worker_url_mode)
+    error_message = "central_worker_url_mode must be either private or public."
+  }
+}
+
 variable "central_instance_type" {
   description = "Instance type for the central dispatcher."
   type        = string

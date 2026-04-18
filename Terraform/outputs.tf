@@ -38,6 +38,11 @@ output "worker_public_api_urls" {
   value       = local.worker_public_url_map
 }
 
+output "central_server_worker_urls" {
+  description = "Worker URLs rendered into the central dispatcher."
+  value       = local.central_worker_url_map
+}
+
 output "central_server_public_ip" {
   description = "Elastic IP attached to the central dispatcher."
   value       = try(aws_eip.central[0].public_ip, null)

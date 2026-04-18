@@ -6,7 +6,7 @@ This folder codifies the infrastructure implied by the repo and your deployment 
 - DynamoDB tables for extracted text and compliance summaries
 - A Lambda function built from `../lambdaFunc_Backup.py` and triggered by S3 uploads
 - A public EC2 worker fleet that runs the Docker image from your earlier deployment pattern
-- An optional public central dispatcher EC2 instance that is rendered from the repo's `worker-node/central_server.py` logic and automatically points to the worker private IPs
+- An optional public central dispatcher EC2 instance that is rendered from the repo's `worker-node/central_server.py` logic and can point to either worker private or public IPs
 
 ## What changed from the old manual deployment
 
@@ -36,5 +36,5 @@ Copy `terraform.tfvars.example` to `terraform.tfvars` and adjust values first if
 
 - The worker Docker image remains `kanishk2kumar/sih-worker:v2`.
 - The Lambda code still expects the current table names unless you also update the Python source.
-- Worker-to-central traffic is private inside the VPC by default.
+- The central dispatcher uses `central_worker_url_mode` and defaults to worker public URLs.
 - Direct public access to worker APIs is closed unless you populate `worker_api_ingress_cidrs`.

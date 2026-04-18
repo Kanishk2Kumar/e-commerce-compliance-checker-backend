@@ -76,7 +76,7 @@ resource "aws_instance" "central" {
   user_data = templatefile("${path.module}/templates/central_user_data.sh.tftpl", {
     central_port      = var.central_server_port
     central_server_py = templatefile("${path.module}/templates/central_server.py.tftpl", {
-      worker_urls_json = jsonencode(local.worker_private_url_map)
+      worker_urls_json = jsonencode(local.central_worker_url_map)
     })
   })
 

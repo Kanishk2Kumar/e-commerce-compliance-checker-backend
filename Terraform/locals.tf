@@ -32,4 +32,6 @@ locals {
     for name, idx in local.worker_name_map :
     name => format("http://%s:%d", aws_instance.worker[idx].public_ip, var.worker_host_port)
   }
+
+  central_worker_url_map = var.central_worker_url_mode == "public" ? local.worker_public_url_map : local.worker_private_url_map
 }

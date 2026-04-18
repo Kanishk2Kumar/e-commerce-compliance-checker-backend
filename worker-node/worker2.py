@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 import urllib.parse
 
 # ----- AWS CONFIG -----
-S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "sih-25057-backend-storage-shardul")
+S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "sih-25057-prod-916273703597")
 S3_REGION = os.getenv("S3_REGION", "us-east-1")
 DYNAMODB_TABLE = os.getenv("DYNAMODB_TABLE", "TextractProductImages")
 
