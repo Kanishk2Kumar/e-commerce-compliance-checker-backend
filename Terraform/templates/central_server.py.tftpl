@@ -21,6 +21,7 @@ WORKERS = ${worker_urls_json}
 class RangeRequest(BaseModel):
     start: int
     end: int
+    headless: bool = True
 
 
 @app.get("/health")
@@ -55,7 +56,7 @@ async def dispatch_range(req: RangeRequest):
         if chunk_start > end:
             break
 
-        payload = {"start": chunk_start, "end": chunk_end}
+        payload = {"start": chunk_start, "end": chunk_end, "headless": req.headless}
         assignments[worker_name] = {"url": worker_url, "range": payload}
         tasks.append(send_to_worker(worker_url, payload))
 

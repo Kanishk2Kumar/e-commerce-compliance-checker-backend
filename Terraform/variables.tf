@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region where the stack will be deployed."
   type        = string
-  default     = "us-east-1"
+  default     = "ap-south-1"
 }
 
 variable "project_name" {
@@ -42,7 +42,7 @@ variable "public_subnet_cidrs" {
 variable "key_name" {
   description = "Optional EC2 key pair name for SSH access."
   type        = string
-  default     = "us-east-1-key"
+  default     = "ap-south-1-key"
   nullable    = true
 }
 
@@ -102,7 +102,7 @@ variable "central_server_port" {
 variable "worker_count" {
   description = "Number of scraping worker EC2 instances to create."
   type        = number
-  default     = 5
+  default     = 0
 }
 
 variable "worker_instance_type" {
@@ -132,7 +132,7 @@ variable "worker_container_port" {
 variable "worker_docker_image" {
   description = "Docker image for the worker service."
   type        = string
-  default     = "kanishk2kumar/sih-worker:v2"
+  default     = "kanishk2kumar/sih-worker:v3"
 }
 
 variable "s3_bucket_name" {
