@@ -102,7 +102,7 @@ variable "central_server_port" {
 variable "worker_count" {
   description = "Number of scraping worker EC2 instances to create."
   type        = number
-  default     = 0
+  default     = 1
 }
 
 variable "worker_instance_type" {

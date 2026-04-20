@@ -1,25 +1,24 @@
-# Use Playwright's official Python image (browsers + deps included)
-FROM mcr.microsoft.com/playwright/python:latest
+# Keep image browser binaries aligned with playwright Python package.
+FROM mcr.microsoft.com/playwright/python:v1.58.0-jammy
 
-# Avoid python buffering so logs appear immediately
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
 WORKDIR /app
 
-# Copy only requirements first to leverage Docker cache
+# Install Python dependencies first for better layer cache reuse.
 COPY requirements.txt /app/requirements.txt
-
-# Upgrade pip and install Python deps
 RUN python -m pip install --upgrade pip \
  && pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy app code
-COPY . /app
+# Allow optional headed browser runs in containerized environments.
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends xvfb \
+ && rm -rf /var/lib/apt/lists/*
 
-# Ensure playwright browsers are installed (should be in base image, but safe to call)
-RUN python -m playwright install --with-deps chromium
+# Copy only the worker entrypoint for this image.
+COPY worker_new.py /app/worker_new.py
 
-# Expose port used by uvicorn
 EXPOSE 8000
 
-# Run uvicorn (do NOT use reload in production)
-CMD ["uvicorn", "worker_new:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
+CMD ["sh", "-lc", "if [ \"$USE_XVFB\" = \"1\" ]; then xvfb-run -a uvicorn worker_new:app --host 0.0.0.0 --port 8000 --loop uvloop; else uvicorn worker_new:app --host 0.0.0.0 --port 8000 --loop uvloop; fi"]

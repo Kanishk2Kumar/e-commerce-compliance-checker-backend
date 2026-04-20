@@ -1,3 +1,4 @@
-worker.py
-.venv
-__pycache__
+*
+!dockerfile
+!requirements.txt
+!worker_new.py

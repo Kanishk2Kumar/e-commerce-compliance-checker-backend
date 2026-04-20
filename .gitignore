@@ -10,3 +10,26 @@ wheels/
 .venv
 Product-Images
 .env
+
+# Terraform local state and cache
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+*.tfvars
+*.tfvars.json
+
+# Keep example values but ignore local secrets
+!*.tfvars.example
+
+# OS/editor/local artifacts
+*.Zone.Identifier
+.codex
+
+# Build artifacts
+Terraform/lambdaFunc_Backup.zip
